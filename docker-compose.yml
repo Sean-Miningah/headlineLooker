@@ -1,7 +1,7 @@
 version: "3.9"
    
 services:
-  kikapuweb:
+  django-app:
     build: .
     command: gunicorn --bind :8000 --workers 3 config.wsgi:application
     volumes:
