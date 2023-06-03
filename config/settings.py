@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1#9&8b*vh2-+i4a644e(puhswjbevu5np&cxw9!%(4u)oykh6-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG') in ('True',)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-CLOUD_DB = os.getenv('CLOUD_DB')
+CLOUD_DB = os.getenv('CLOUD_DB') in ('True',)
 
 if CLOUD_DB:
   DATABASES = {
