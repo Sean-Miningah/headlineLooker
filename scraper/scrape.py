@@ -20,20 +20,50 @@ class Scraper:
         return random.choice(uastrings)
 
 
-    def __init__(self, url, content=None):
+    def __init__(self, url):
         self.url = url
-        self.content = content
         self.header = {'User-Agent': self.GET_UA()}
-        self.source = requests.get(url, headers = self.header).text
-        self.soup = BeautifulSoup(self.source, 'lxml')
+        self.source = requests.get(url, headers = self.header)
+        self.soup = BeautifulSoup(self.source.content, 'html.parser')
 
     
     
-class NationScraper(Scraper):
+class JumiaScraper(Scraper):
+    def __init__(self, url):
+        self.products = []
+        super().__init__(url)
+        
     
     def scrape_data(self):
-        pass
-    
+        product_cards = self.soup.find_all("a", class_="core")
+        
+        for card in product_cards:
+            brand = card.get('data-brand')
+            name = card.get('data-name')
+            category = card.get('data-category')
+  
+            price = card.find('div', class_='prc')
+            old_price = card.find('div', class_='old')
+            discount = card.find('div', class_=['_sm'])
+            official = card.find('div', class_=['bdg _mall _xs'])
+  
+            if brand and name and price: 
+                price = int(price.text.replace('KSh', '').replace(',', '')) if price else 'N/A'
+                old_price = int(old_price.text.replace('KSh', '').replace(',', '')) if old_price else 'N/A'
+                discount = int(discount.text.replace('%', '')) if discount else 'N/A'
+                official = official.text if official else 'N/A'
+
+                product = { 'brand' : brand,
+                            'name': name,
+                            'category': category, 
+                            'price': price,
+                            'old_price': old_price,
+                            'discount': discount,
+                            'official_store': official
+                        }
+                self.products.append(product)
+        
+        return self.products
     
 class StandardScraper(Scraper):
     pass
