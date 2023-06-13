@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'debug_toolbar',
     'django_filters',
+    'django_celery_beat',
     
     'core',
     'user',
@@ -187,10 +188,11 @@ else:
 
 CELERY_TIMEZONE = 'Africa/Nairobi'
 
-CELERY_BEAT_SCHEDULE = {
-    "scheduled_task": {
-        'task': 'scraper.tasks.saved_scraped_data',
-        'schedule': 5.0,
-        'args': (JUMIA_SMARTPHONE_URL) 
-    }
-}
+# Manually Scheduling the celery workers
+# CELERY_BEAT_SCHEDULE = {
+#     "scheduled_task": {
+#         'task': 'scraper.jumia_scraper',
+#         'schedule': 30.0,
+#         'args': (JUMIA_SMARTPHONE_URL,) 
+#     }
+# }

@@ -21,5 +21,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
+EXPOSE 5566
 
 CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "config.wsgi:application"]
+# CMD ["./start.sh"]

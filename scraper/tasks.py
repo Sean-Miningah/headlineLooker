@@ -1,11 +1,13 @@
 from config.celery import app
+from celery.utils.log import get_task_logger
 from celery import shared_task
 
 from scraper.scrape import JumiaScraper
 from scraper.models import Product
 
+logger = get_task_logger(__name__)
 
-@app.task
+@app.task(name="scraper.jumia_scraper")
 def save_scraped_data(url):
 	try:
 		jumia = JumiaScraper(url)
@@ -15,8 +17,9 @@ def save_scraped_data(url):
 				**data
 			)
 			product.save()
+		logger.info('Scrape and save task successful')
 	except Exception as e:
-		print('The scraping task failed. Investigate Excepiton')
+		logger.info('The scraping task failed. Investigate Excepiton')
 		print(e)
 
 
