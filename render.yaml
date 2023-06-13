@@ -30,7 +30,7 @@ services:
       - key: CLOUD_DB
         value: True
       - key: ALLOWED_HOSTS
-        value: *
+        value: '*'
       - key: JUMIA_SMARTPHONE_URL
         value: https://www.jumia.co.ke/smartphones/
       - key: JUMIA_LIQOUR_URL
