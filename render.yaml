@@ -36,9 +36,8 @@ services:
       - key: JUMIA_LIQOUR_URL
         value: https://www.jumia.co.ke/spirits-liquors/
       - key: POSTGRESDB_URL
-        fromService:
+        fromDatabase:
           name: scraper-postgres
-          type: postgres
           property: connectionString
       - key: REDIS_URL
         fromService:
@@ -80,3 +79,7 @@ services:
     region: frankfurt 
     plan: free
     ipAllowList: ['0.0.0.0/0',]
+
+databases:
+  - name: scraper-postgres
+    user: scraper-app
