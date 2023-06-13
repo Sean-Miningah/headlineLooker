@@ -79,4 +79,4 @@ services:
 
 databases:
   - name: scraperPostgres
-    user: scraperApp
+    user: scraper_app
