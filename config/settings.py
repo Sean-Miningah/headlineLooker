@@ -130,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -172,3 +172,25 @@ GRAPHQL_JWT = {
     "JWT_EXPIRATION_DELTA": timedelta(days=1)
 }
 
+JUMIA_SMARTPHONE_URL = os.getenv('JUMIA_SMARTPHONE_URL')
+JUMIA_LIQUOR_URL = os.getenv('JUMIA_LIQOUR_URL')
+
+CLOUD_REDIS = os.getenv('CLOUD_REDIS') in ('True',)
+
+if CLOUD_REDIS:
+    CELERY_BROKER_URL = os.getenv('REDIS_URL') + '0?ssl_cert_reqs=CERT_REQUIRED'
+    CELERY_RESULT_BACKEND = os.getenv('REDIS_URL') + '0?ssl_cert_reqs=CERT_REQUIRED'
+else:
+    CELERY_BROKER_URL='redis://localhost:6379'
+    CELERY_RESULT_BACKEND='redis://localhost:6379'
+
+
+CELERY_TIMEZONE = 'Africa/Nairobi'
+
+CELERY_BEAT_SCHEDULE = {
+    "scheduled_task": {
+        'task': 'scraper.tasks.saved_scraped_data',
+        'schedule': 5.0,
+        'args': (JUMIA_SMARTPHONE_URL) 
+    }
+}
