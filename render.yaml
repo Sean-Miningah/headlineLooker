@@ -1,6 +1,7 @@
 services:
   - type: worker
     name: queue
+    plan: free
     region: frankfurt
     env: python
     buildCommand: "pip install -r requirements.txt"
@@ -24,6 +25,7 @@ services:
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn app:app"
     autoDeploy: false
+    plan: free
     envVars:
       - key: DEBUG 
         value: False 
@@ -80,3 +82,4 @@ services:
 databases:
   - name: scraperPostgres
     user: scraper_app
+    plan: free
