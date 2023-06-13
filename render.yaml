@@ -72,13 +72,6 @@ services:
     name: celery-redis
     region: frankfurt
     plan: free
-    maxmemoryPolicy: noeviction 
-    ipAllowList: [] 
-  - type: postgres
-    name: scraper-postgres
-    region: frankfurt 
-    plan: free
-    ipAllowList: ['0.0.0.0/0',]
 
 databases:
   - name: scraper-postgres
