@@ -95,11 +95,15 @@ CLOUD_DB = os.getenv('CLOUD_DB') in ('True',)
 
 if CLOUD_DB:
   DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('POSTGRESDB_URL'),
-            conn_max_age=600
-            )
-        }  
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'graphql_scraper',
+            'USER': 'Sean-Miningah',
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': 'ep-twilight-cake-099424-pooler.eu-central-1.aws.neon.tech',
+            'PORT': '5432',
+        }
+    }  
 else:
   DATABASES = {
     'default': {
@@ -179,8 +183,8 @@ JUMIA_LIQUOR_URL = os.getenv('JUMIA_LIQOUR_URL')
 CLOUD_REDIS = os.getenv('CLOUD_REDIS') in ('True',)
 
 if CLOUD_REDIS:
-    CELERY_BROKER_URL = os.getenv('REDIS_URL') + '0?ssl_cert_reqs=CERT_REQUIRED'
-    CELERY_RESULT_BACKEND = os.getenv('REDIS_URL') + '0?ssl_cert_reqs=CERT_REQUIRED'
+    CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+    CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 else:
     CELERY_BROKER_URL='redis://localhost:6379'
     CELERY_RESULT_BACKEND='redis://localhost:6379'
