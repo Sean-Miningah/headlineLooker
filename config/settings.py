@@ -10,13 +10,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from datetime import timedelta
-import dj_database_url
 
 from dotenv import load_dotenv
 import os
 from pathlib import Path
 
-load_dotenv()
+# load_dotenv()
+
+# if os.getenv('DJANGO_READ_DOT_ENV_FILE') == '.env':
+#     load_dotenv('.env')
+# else:
+load_dotenv('.env.dev')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -97,11 +102,11 @@ if CLOUD_DB:
   DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'graphql_scraper',
-            'USER': 'Sean-Miningah',
+            'NAME': os.getenv('POSTGRES_DB'),
+            'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': 'ep-twilight-cake-099424-pooler.eu-central-1.aws.neon.tech',
-            'PORT': '5432',
+            'HOST': os.getenv('POSTGRES_HOST'),
+            'PORT': os.getenv('POSTGRES_PORT'),
         }
     }  
 else:
@@ -177,15 +182,27 @@ GRAPHQL_JWT = {
     "JWT_EXPIRATION_DELTA": timedelta(days=1)
 }
 
+
+# Scrape Url Settings
 JUMIA_SMARTPHONE_URL = os.getenv('JUMIA_SMARTPHONE_URL')
 JUMIA_LIQUOR_URL = os.getenv('JUMIA_LIQOUR_URL')
 
-CLOUD_REDIS = os.getenv('CLOUD_REDIS') in ('True',)
+CLOUD_BROKER = os.getenv('CLOUD_BROKER') in ('True',)
 
-if CLOUD_REDIS:
+if CLOUD_BROKER:
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 else:
-    CELERY_BROKER_URL='redis://localhost:6379'
+    CELERY_BROKER_URL= ( 
+        'amqp://' + 
+        os.getenv('RABBITMQ_DEFAULT_USER') + 
+        ':' + 
+        os.getenv('RABBITMQ_DEFAULT_PASS') + 
+        '@' +
+        'rabbitmq' +
+        ':' +
+        '5672' +
+        '//'
+    )
 
 
 CELERY_TIMEZONE = 'Africa/Nairobi'
