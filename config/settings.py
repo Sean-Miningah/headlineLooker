@@ -13,14 +13,11 @@ from datetime import timedelta
 
 from dotenv import load_dotenv
 import os
+import dj_database_url
 from pathlib import Path
 
-# load_dotenv()
+load_dotenv()
 
-# if os.getenv('DJANGO_READ_DOT_ENV_FILE') == '.env':
-#     load_dotenv('.env')
-# else:
-load_dotenv('.env.dev')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -53,7 +50,6 @@ INSTALLED_APPS = [
     'graphene_django',
     'debug_toolbar',
     'django_filters',
-    'django_celery_beat',
     
     'core',
     'user',
@@ -97,18 +93,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 CLOUD_DB = os.getenv('CLOUD_DB') in ('True',)
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 if CLOUD_DB:
   DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': os.getenv('POSTGRES_HOST'),
-            'PORT': os.getenv('POSTGRES_PORT'),
-        }
-    }  
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True
+        )
+    }
 else:
   DATABASES = {
     'default': {
@@ -186,32 +180,3 @@ GRAPHQL_JWT = {
 # Scrape Url Settings
 JUMIA_SMARTPHONE_URL = os.getenv('JUMIA_SMARTPHONE_URL')
 JUMIA_LIQUOR_URL = os.getenv('JUMIA_LIQOUR_URL')
-
-CLOUD_BROKER = os.getenv('CLOUD_BROKER') in ('True',)
-
-if CLOUD_BROKER:
-    CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
-else:
-    CELERY_BROKER_URL= ( 
-        'amqp://' + 
-        os.getenv('RABBITMQ_DEFAULT_USER') + 
-        ':' + 
-        os.getenv('RABBITMQ_DEFAULT_PASS') + 
-        '@' +
-        'rabbitmq' +
-        ':' +
-        '5672' +
-        '//'
-    )
-
-
-CELERY_TIMEZONE = 'Africa/Nairobi'
-
-# Manually Scheduling the celery workers
-# CELERY_BEAT_SCHEDULE = {
-#     "scheduled_task": {
-#         'task': 'scraper.jumia_scraper',
-#         'schedule': 30.0,
-#         'args': (JUMIA_SMARTPHONE_URL,) 
-#     }
-# }
