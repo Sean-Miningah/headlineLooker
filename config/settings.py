@@ -15,11 +15,7 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 
-# load_dotenv()
 
-# if os.getenv('DJANGO_READ_DOT_ENV_FILE') == '.env':
-#     load_dotenv('.env')
-# else:
 load_dotenv('.env.dev')
 
 
@@ -187,22 +183,18 @@ GRAPHQL_JWT = {
 JUMIA_SMARTPHONE_URL = os.getenv('JUMIA_SMARTPHONE_URL')
 JUMIA_LIQUOR_URL = os.getenv('JUMIA_LIQOUR_URL')
 
-CLOUD_BROKER = os.getenv('CLOUD_BROKER') in ('True',)
 
-if CLOUD_BROKER:
-    CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
-else:
-    CELERY_BROKER_URL= ( 
-        'amqp://' + 
-        os.getenv('RABBITMQ_DEFAULT_USER') + 
-        ':' + 
-        os.getenv('RABBITMQ_DEFAULT_PASS') + 
-        '@' +
-        'rabbitmq' +
-        ':' +
-        '5672' +
-        '//'
-    )
+CELERY_BROKER_URL= ( 
+    'amqp://' + 
+    os.getenv('RABBITMQ_DEFAULT_USER') + 
+    ':' + 
+    os.getenv('RABBITMQ_DEFAULT_PASS') + 
+    '@' +
+    'rabbitmq' +
+    ':' +
+    '5672' +
+    '//'
+)
 
 
 CELERY_TIMEZONE = 'Africa/Nairobi'
