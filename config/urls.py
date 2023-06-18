@@ -18,17 +18,19 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
+from graphene_django.views import GraphQLView
 from graphene_file_upload.django import FileUploadGraphQLView
 
 from .healthview import healthy_view
-from core.views import GraphQLPlaygroundView
+from scraper.views import scrape_info
 
 
 urlpatterns = [
     path('healthz', healthy_view),
     path("admin/", admin.site.urls),
-    path('graphql', csrf_exempt(FileUploadGraphQLView.as_view(graphiql=False))),
-    path('playground', csrf_exempt(GraphQLPlaygroundView.as_view(endpoint="/graphql"))),
+    path('graphql', csrf_exempt(FileUploadGraphQLView.as_view(graphiql=True))),
+    path('playground', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path("__debug__/", include(debug_toolbar.urls)),
-    # path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    
+    path('scrape/', scrape_info)
 ]
