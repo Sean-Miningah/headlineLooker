@@ -1,3 +1,12 @@
+[tool.poetry]
+name = "shopscraper"
+version = "0.1.0"
+description = "'GraphQL API providing access to scraped product data from ecommerce store'"
+authors = ["Sean-Miningah <miningahsean@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
 django = "^4.2.2"
 graphene-django = "^3.1.2"
 psycopg2 = "^2.9.6"
@@ -14,3 +23,8 @@ python-dotenv = "^1.0.0"
 requests = "^2.31.0"
 graphene-django-optimizer = "^0.9.1"
 whitenoise = "^6.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
