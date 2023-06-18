@@ -25,6 +25,6 @@ def save_jumia():
 
 def jumia_scrape():
 	scheduler = BackgroundScheduler()
-	scheduler.add_job(save_jumia, 'cron', hour='9, 14', minutes='' timezone=nairobi)
+	scheduler.add_job(save_jumia, 'cron', hour='9, 14', timezone=nairobi)
 	scheduler.start()
 
