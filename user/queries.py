@@ -1,31 +1,14 @@
 import graphene
-import graphene_django_optimizer as gql_optimizer
-from core.mutations import AppResolverInfo
-from django.db.models.query import QuerySet
-from graphene import ObjectType
 from graphql import GraphQLError
-from graphql_jwt.decorators import login_required
 from user.models import User
-from user.types import Profile, UserNode
+from user.types import UserNode
 
 
-class UsersQuery(ObjectType):
+class UsersQuery(graphene.ObjectType):
     current_user = graphene.Field(UserNode)
-    get_profile = graphene.Field(Profile, username=graphene.String(required=True))
 
-    @staticmethod
-    def resolve_current_user(root, info: AppResolverInfo, **kwargs) -> QuerySet[User]:
+    def resolve_current_user(self, info, **kwargs):
         if not info.context.user or not info.context.user.is_authenticated:
             raise GraphQLError("No User Logged in")
-        optimized_query = gql_optimizer.query(
-            User.objects.filter(id=info.context.user.id), info
-        )
-        return optimized_query.first()
-
-    @staticmethod
-    @login_required
-    def resolve_get_profile(
-        root, info: AppResolverInfo, username: str
-    ) -> QuerySet[User]:
-        optimized_query = gql_optimizer.query(User.objects.get(username=username), info)
-        return optimized_query
+        user = User.objects.filter(id=info.context.user.id)
+        return user.first()

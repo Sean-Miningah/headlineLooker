@@ -3,7 +3,7 @@ from typing import Any
 
 import graphene
 import graphql_jwt
-from core.mutations import AppResolverInfo, BaseMutation
+from core.mutations import BaseMutation
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from user.models import User
@@ -20,15 +20,12 @@ class CreateUserMutation(BaseMutation):
 
     user = graphene.Field(UserNode, required=True)
 
-    @classmethod
-    def mutate_and_get_payload(
-        cls, root, info: AppResolverInfo, **data
-    ) -> "CreateUserMutation":
+    def mutate_and_get_payload(self, info, **data):
         password = data.get("password")
         confirm_password = data.pop("confirm_password")
         if not password == confirm_password:
             raise GraphQLError("password and confirm_password must match")
-
+        print(f'------------{data}--------')
         user = User.objects.create_user(**data)
 
         return CreateUserMutation(success=True, user=user)
@@ -39,11 +36,7 @@ class UpdateUserMutation(BaseMutation):
 
     user = graphene.Field(UserNode)
 
-    @classmethod
-    @login_required
-    def mutate_and_get_payload(
-        cls, root, info: AppResolverInfo, **data: Any
-    ) -> "UpdateUserMutation":
+    def mutate_and_get_payload(self, info, **data):
         current_user = info.context.user
         for key, value in data.items():
             setattr(current_user, key, value)
@@ -60,7 +53,7 @@ class UserLoginMutation(graphql_jwt.relay.JSONWebTokenMutation):
     user = graphene.Field(UserNode)
 
     @classmethod
-    def resolve(cls, _, info, **kwargs):
+    def resolve(cls, root, info, **kwargs):
         return cls(user=info.context.user)
 
 
